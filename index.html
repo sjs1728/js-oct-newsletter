@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JS운동발달센터 10월 소식</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: 'Noto Sans KR', -apple-system, sans-serif;
+    background: #1a1a2e;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .slides-wrapper {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .slide {
+    position: absolute;
+    margin: auto;
+    width: 100%;
+    max-width: 400px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: 0 20px 80px rgba(0,0,0,0.5);
+    opacity: 0;
+    transform: scale(0.9) translateY(30px);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    padding: 20px 18px;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    pointer-events: auto;
+  }
+
+  .slide.exit {
+    opacity: 0;
+    transform: scale(0.9) translateY(-30px);
+  }
+
+  /* 커버 */
+  .s1{text-align:center;padding-top:30px;}
+  .s1 .logo{margin-bottom:12px;}
+  .s1 .logo img{height:40px;object-fit:contain;}
+  .s1 .bar{width:50px;height:3px;background:#1a3a5c;margin:0 auto 16px;border-radius:2px;}
+  .s1 .tag{font-size:11px;font-weight:700;color:#1a3a5c;letter-spacing:3px;margin-bottom:4px;}
+  .s1 h1{font-size:34px;font-weight:900;color:#1a3a5c;margin-bottom:2px;}
+  .s1 h1 span{color:#e6a817;}
+  .s1 .sub{font-size:13px;color:#888;margin-bottom:16px;}
+  .s1 .badge{font-size:12px;font-weight:500;color:#fff;background:#1a3a5c;padding:6px 22px;border-radius:30px;display:inline-block;}
+  .s1 .emo{font-size:22px;letter-spacing:8px;margin-top:14px;}
+
+  /* 달력 */
+  .s2 .lt{font-size:15px;font-weight:700;color:#1a3a5c;margin-bottom:10px;}
+  .hc{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:10px;}
+  .hc .c{padding:3px 8px;border-radius:12px;font-size:10px;font-weight:500;}
+  .hc .r{background:#ffebee;color:#c62828;}
+  .hc .b{background:#e3f2fd;color:#1565c0;}
+  .hc .g{background:#f5f5f5;color:#888;}
+  .hc .y{background:#fff8e1;color:#e6a817;}
+
+  .cg{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px;}
+  .cg .hd{font-size:9px;font-weight:600;color:#bbb;text-align:center;padding:3px 0;}
+  .cg .d{text-align:center;padding:4px 0;font-size:12px;color:#333;border-radius:6px;}
+  .cg .d.r{background:#ffebee;color:#c62828;font-weight:600;}
+  .cg .d.gr{color:#ccc;}
+  .cg .d.t{background:#1a3a5c;color:#fff;font-weight:700;}
+  .cg .d.v{background:#e3f2fd;color:#1565c0;font-weight:600;}
+  .cg .d.y{background:#fff8e1;color:#e6a817;font-weight:600;}
+  .cg .d .dl{display:block;font-size:6px;font-weight:400;color:#b8860b;line-height:1.1;margin-top:0;white-space:nowrap;}
+
+  .leg{display:flex;gap:10px;margin-top:4px;font-size:9px;color:#999;}
+  .ld{width:6px;height:6px;border-radius:50%;display:inline-block;}
+  .ld.r{background:#ffcdd2;}
+  .ld.v{background:#bbdefb;}
+  .ld.y{background:#ffe082;}
+
+  .up{margin-top:10px;padding:10px;background:#f8f9fa;border-radius:12px;}
+  .up .ut{font-size:10px;font-weight:700;color:#1a3a5c;margin-bottom:6px;}
+  .up .ui{font-size:11px;color:#444;padding:3px 0;}
+  .up .ui .ub{display:inline-block;font-size:9px;font-weight:700;background:#e6a817;color:#fff;padding:1px 7px;border-radius:10px;margin-right:4px;}
+
+  /* 뉴스 */
+  .s3 .st{font-size:15px;font-weight:700;color:#1a3a5c;margin-bottom:10px;}
+  .s3 p{font-size:12px;line-height:1.5;color:#444;margin-bottom:6px;}
+  .hb{background:#f8f9fa;border-radius:12px;padding:10px;margin:8px 0;}
+  .hb .hi{font-size:11px;line-height:1.45;padding:4px 0;}
+  .tot{background:linear-gradient(145deg,#1a3a5c,#26547c);border-radius:12px;padding:9px 10px;margin:8px 0;text-align:center;color:#fff;}
+  .tot .b{font-size:17px;font-weight:800;letter-spacing:1px;}
+  .tot .l{font-size:10px;opacity:0.88;margin-top:3px;}
+  .tm{background:#f8f9fa;border-radius:12px;padding:8px 10px;margin:6px 0;border-left:4px solid #1a3a5c;}
+  .tm .tn{font-size:11px;font-weight:700;color:#1a3a5c;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center;}
+  .tm .tc{font-size:9px;font-weight:700;color:#fff;background:#e6a817;border-radius:8px;padding:1px 7px;}
+  .tm .tr{font-size:10px;line-height:1.45;color:#333;display:flex;gap:4px;padding:1px 0;word-break:keep-all;overflow-wrap:break-word;}
+  .tm .tr .m{flex:0 0 auto;}
+  .tmh{display:flex;justify-content:space-between;align-items:center;background:#f8f9fa;border-left:4px solid #1a3a5c;border-radius:10px;padding:6px 10px;margin:9px 0 3px;}
+  .tmh .n{font-size:11.5px;font-weight:700;color:#1a3a5c;}
+  .tmh .c{font-size:9px;font-weight:700;color:#fff;background:#e6a817;border-radius:8px;padding:1px 7px;}
+  .rk{width:100%;border-collapse:collapse;margin:0 0 4px;font-size:10px;}
+  .rk th{background:#1a3a5c;color:#fff;font-size:9.5px;font-weight:700;padding:4px 3px;text-align:center;}
+  .rk th:first-child{text-align:left;padding-left:8px;}
+  .rk td{padding:4px 3px;border-bottom:1px solid #eef1f4;text-align:center;color:#333;}
+  .rk td:first-child{text-align:left;padding-left:8px;font-weight:700;color:#1a3a5c;}
+  .rk tr:last-child td{border-bottom:none;}
+  .rk .g{color:#b8860b;font-weight:700;}
+  .rk .s{color:#77848f;font-weight:700;}
+  .rk .b{color:#a06030;font-weight:700;}
+  .rk .x{color:#c0c0c0;font-size:9px;}
+  .rk.wide td{padding:2.5px 3px;font-size:9.5px;}
+  .rk.wide th{padding:4px 3px;}
+  .event-box{background:linear-gradient(145deg,#e8f5e9,#f1f8e9);border-radius:12px;padding:12px;margin:8px 0;border-left:4px solid #43a047;}
+  .event-box .eb-date{font-size:11px;color:#2e7d32;font-weight:600;margin-bottom:3px;}
+  .event-box .eb-title{font-size:14px;font-weight:700;color:#1b5e20;margin-bottom:3px;}
+  .event-box .eb-place{font-size:12px;color:#555;}
+
+  /* 사진 */
+  .s4{padding:14px !important;background:#1a3a5c !important;}
+  .s4 .st{font-size:12px;font-weight:700;color:rgba(255,255,255,0.9);text-align:center;margin-bottom:8px;}
+  .s4 .grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+  .s4 .grid img{width:100%;border-radius:6px;display:block;}
+  .s4 .grid .wide{grid-column:1/-1;}
+  .s4 .one{display:flex;justify-content:center;align-items:center;}
+  .s4 .one img{max-height:56vh;max-width:100%;border-radius:8px;display:block;}
+  .s4 .cap{font-size:11px;color:rgba(255,255,255,0.85);text-align:center;margin-top:8px;line-height:1.5;font-weight:600;}
+  .s4 .big{width:100%;aspect-ratio:16/9;object-fit:cover;object-position:center 42%;border-radius:6px;display:block;margin-bottom:5px;}
+  .s4 .g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;}
+  .s4 .g3 img{width:100%;aspect-ratio:1/1;object-fit:cover;object-position:center 38%;border-radius:6px;display:block;}
+  .s4 .g2ph{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+  .s4 .g2ph img{width:100%;aspect-ratio:4/3;object-fit:cover;object-position:center 38%;border-radius:6px;display:block;}
+
+  /* 안내사항 */
+  .s5 .st{font-size:15px;font-weight:700;color:#1a3a5c;margin-bottom:10px;}
+  .ic{background:#f8f9fa;border-radius:12px;padding:10px 12px;margin-bottom:8px;}
+  .ic h4{font-size:12px;font-weight:700;margin-bottom:4px;}
+  .ic.w{border-left:4px solid #e53935;}
+  .ic.w h4{color:#c62828;}
+  .ic.ok{border-left:4px solid #43a047;}
+  .ic.ok h4{color:#2e7d32;}
+  .ic.no{border-left:4px solid #888;}
+  .ic.no h4{color:#666;}
+  .ic.re{border-left:4px solid #e6a817;}
+  .ic.re h4{color:#b8860b;}
+  .ic p{font-size:11px;color:#555;line-height:1.45;}
+
+  /* 마무리 */
+  .s6{background:#1a3a5c !important;color:#fff;text-align:center;padding:28px 32px !important;}
+  .s6 .be{font-size:32px;margin-bottom:6px;}
+  .s6 h2{font-size:16px;font-weight:700;margin-bottom:2px;}
+  .s6 p{font-size:11px;opacity:0.8;line-height:1.5;}
+  .s6 .ft{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.15);font-size:10px;opacity:0.5;}
+
+  /* 네비게이션 */
+  .nav {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 10px 20px;
+    border-radius: 40px;
+    z-index: 100;
+  }
+  .nav button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+  .nav button:hover { background: rgba(255,255,255,0.15); }
+  .nav button:disabled { opacity: 0.3; cursor: default; }
+  .nav .counter { color: rgba(255,255,255,0.7); font-size: 13px; min-width: 40px; text-align: center; }
+  .nav .dots { display: flex; gap: 6px; }
+  .nav .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    transition: all 0.3s;
+  }
+  .nav .dot.active { background: #fff; transform: scale(1.3); }
+
+  @media (min-width: 768px) {
+    .slide { max-width: 440px; }
+  }
+  @media (max-width: 430px) {
+    .slide { max-width: calc(100vw - 24px); }
+  }
+</style>
+</head>
+<body>
+
+<div class="slides-wrapper">
+
+  <!-- 1: 커버 -->
+  <div class="slide s1 active">
+    <div class="logo"><img src="js_logo.jpg" alt="JS운동발달센터"></div>
+    <div class="bar"></div>
+    <div class="tag">SPECIAL PHYSICAL EDUCATION</div>
+    <h1>10월 <span>소식</span></h1>
+    <p class="sub">센터 소식 &amp; 수업일정</p>
+    <div class="badge">October 2026</div>
+    <div class="emo">🍁 🏅 🏊</div>
+  </div>
+
+  <!-- 2: 달력 -->
+  <div class="slide s2">
+    <div class="lt">📅 10월 휴관·일정</div>
+    <div class="hc">
+      <span class="c r">매주 월요일 휴강</span>
+      <span class="c r">10/3(토) 개천절 휴관</span>
+      <span class="c r">10/9(금) 한글날 휴관</span>
+      <span class="c r">10/29~31(목~토) 5주차 휴강</span>
+    </div>
+    <div class="cg">
+      <div class="hd">일</div><div class="hd">월</div><div class="hd">화</div><div class="hd">수</div><div class="hd">목</div><div class="hd">금</div><div class="hd">토</div>
+      <div class="d gr">27</div><div class="d gr">28</div><div class="d gr">29</div><div class="d gr">30</div><div class="d">1</div><div class="d">2</div><div class="d r">3<span class="dl">개천절</span></div>
+      <div class="d">4</div><div class="d r">5</div><div class="d">6</div><div class="d">7</div><div class="d">8</div><div class="d r">9<span class="dl">한글날</span></div><div class="d">10</div>
+      <div class="d">11</div><div class="d r">12</div><div class="d">13</div><div class="d">14</div><div class="d">15</div><div class="d">16</div><div class="d">17</div>
+      <div class="d">18</div><div class="d r">19</div><div class="d">20</div><div class="d">21</div><div class="d">22</div><div class="d">23</div><div class="d">24</div>
+      <div class="d">25</div><div class="d r">26</div><div class="d">27</div><div class="d">28</div><div class="d r">29<span class="dl">5주차</span></div><div class="d r">30</div><div class="d r">31</div>
+    </div>
+
+    <div style="margin-top:6px;background:#ffebee;border-radius:8px;padding:6px 10px;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#c62828;">
+      <span>🇰🇷</span>
+      <span>10/3(토) 개천절 · 10/9(금) 한글날 휴관</span>
+      <span style="margin-left:auto;font-size:10px;background:#c62828;color:#fff;padding:2px 8px;border-radius:8px;">휴관</span>
+    </div>
+    <div style="font-size:10px;color:#666;margin-top:4px;text-align:center;">※ 개천절·한글날 휴관 수업은 <strong>보강 가능</strong> — 담당 선생님과 일정을 잡아주세요</div>
+    <div class="leg">
+      <span><span class="ld r"></span> 휴관</span>
+    </div>
+    <div class="up">
+      <div class="ut">🌟 10월 일정 요약</div>
+      <div class="ui"><span class="ub" style="background:#c62828">휴강</span>매주 월요일 휴강 (10/5·12·19·26)</div>
+      <div class="ui"><span class="ub" style="background:#c62828">휴관</span>10/3(토) 개천절</div>
+      <div class="ui"><span class="ub" style="background:#c62828">휴관</span>10/9(금) 한글날</div>
+      <div class="ui"><span class="ub" style="background:#c62828">휴강</span>10/29(목)~31(토) 5주차 휴강</div>
+    </div>
+  </div>
+
+  <!-- 3: 행사 안내 -->
+  <div class="slide s3">
+    <div class="st">🏅 스페셜올림픽 하계대회 입상</div>
+    <p>안녕하세요, 학부모님 🙇‍♂️</p>
+    <p><strong>제19회 스페셜올림픽코리아 전국하계대회</strong>에 우리 센터 학생들이 출전해 멋진 성적을 거뒀습니다! 🎉</p>
+    
+    <div class="event-box">
+      <div class="eb-date">📅 2026. 8. 31(월) ~ 9. 2(수) &nbsp;|&nbsp; 🏕️ <strong>2박 3일</strong></div>
+      <div class="eb-title">🏅 제19회 스페셜올림픽코리아 전국하계대회</div>
+      <div class="eb-place">📍 경상남도 창원특례시 일원 · 롤러스케이팅</div>
+    </div>
+
+    <div class="tot">
+      <div class="b">🥇 10 · 🥈 12 · 🥉 10</div>
+      <div class="l">총 <strong>메달 32개</strong> — JS운동발달센터 22명 출전</div>
+    </div>
+
+    <div class="tmh"><span class="n">JS운동발달센터</span><span class="c">22명</span></div>
+    <table class="rk wide">
+      <tr><th>선수</th><th>100M</th><th>200M</th></tr>
+      <tr><td>조경준</td><td class="g">🥇 1위</td><td class="g">🥇 1위</td></tr>
+      <tr><td>박정민</td><td></td><td class="g">🥇 1위</td></tr>
+      <tr><td>노성우</td><td class="s">🥈 2위</td><td class="s">🥈 2위</td></tr>
+      <tr><td>민경후</td><td class="s">🥈 2위</td><td class="s">🥈 2위</td></tr>
+      <tr><td>강시연</td><td class="s">🥈 2위</td><td class="s">🥈 2위</td></tr>
+      <tr><td>김서하</td><td class="b">🥉 3위</td><td>4위</td></tr>
+      <tr><td>왕지아</td><td>4위</td><td class="b">🥉 3위</td></tr>
+      <tr><td>정성환</td><td class="g">🥇 1위</td><td class="g">🥇 1위</td></tr>
+      <tr><td>김태헌</td><td class="s">🥈 2위</td><td class="g">🥇 1위</td></tr>
+      <tr><td>이현희</td><td class="s">🥈 2위</td><td class="s">🥈 2위</td></tr>
+      <tr><td>이유찬</td><td class="s">🥈 2위</td><td>5위</td></tr>
+      <tr><td>황정운</td><td class="b">🥉 3위</td><td class="s">🥈 2위</td></tr>
+      <tr><td>양채민</td><td class="b">🥉 3위</td><td class="b">🥉 3위</td></tr>
+      <tr><td>이재석</td><td>4위</td><td class="b">🥉 3위</td></tr>
+      <tr><td>김원경</td><td class="b">🥉 3위</td><td>4위</td></tr>
+      <tr><td>최주원</td><td class="g">🥇 1위</td><td class="g">🥇 1위</td></tr>
+      <tr><td>이강민</td><td class="g">🥇 1위</td><td class="g">🥇 1위</td></tr>
+      <tr><td>황지용</td><td class="s">🥈 2위</td><td></td></tr>
+      <tr><td>신은재</td><td class="b">🥉 3위</td><td class="b">🥉 3위</td></tr>
+      <tr><td>조민서</td><td>4위</td><td class="b">🥉 3위</td></tr>
+      <tr><td>정세민</td><td>4위</td><td>4위</td></tr>
+      <tr><td>박하연</td><td>4위</td><td>4위</td></tr>
+    </table>
+
+    <p>우리 선수들의 값진 도전을 함께 응원해주세요 💪</p>
+  </div>
+
+  <!-- SOK 사진 1: 일상 -->
+  <div class="slide s4">
+    <div class="st">📸 스페셜올림픽 하계대회 — 일상</div>
+    <img class="big" src="sok_01.jpg" alt="실내 체험 활동">
+    <div class="g3">
+      <img src="sok_02.jpg" alt="체육관 릴레이">
+      <img src="sok_03.jpg" alt="HERO KIDS PARK 단체">
+      <img src="sok_04.jpg" alt="클라이밍 체험">
+      <img src="sok_05.jpg" alt="단체 활동">
+      <img src="sok_06.jpg" alt="단체 활동">
+      <img src="sok_07.jpg" alt="숙소 휴식">
+    </div>
+    <div class="cap">2박 3일 창원에서의 즐거운 시간</div>
+  </div>
+
+  <!-- SOK 사진 2: 시합 · 시상식 -->
+  <div class="slide s4">
+    <div class="st">🏅 스페셜올림픽 하계대회 — 시상식</div>
+    <img class="big" src="sok_10.jpg" alt="대회 단체 기념촬영">
+    <div class="g2ph">
+      <img src="sok_08.jpg" alt="시상식 1~4위">
+      <img src="sok_09.jpg" alt="시상대 금메달">
+    </div>
+    <div class="cap">롤러스케이팅 시상식 · 단체 기념촬영</div>
+  </div>
+
+  <!-- 5: 행사 2 - 수원 수영대회 -->
+  <div class="slide s3">
+    <div class="st">🏊 수원특례시장배 전국장애인수영대회 입상</div>
+    <p>안녕하세요, 학부모님 🙇‍♂️</p>
+    <p><strong>제24회 수원특례시장배 전국장애인수영대회</strong>에서 우리 센터 <strong>황정운</strong> 선수가 값진 성적을 거두었습니다! 🎉</p>
+
+    <div class="event-box">
+      <div class="eb-date">📅 2025 &nbsp;|&nbsp; 📍 수원</div>
+      <div class="eb-title">🏊 제24회 수원특례시장배 전국장애인수영대회</div>
+      <div class="eb-place">👤 황정운 — 선수부</div>
+    </div>
+
+    <div class="hb">
+      <div class="hi">🥈 <strong>평영 100m</strong> — 1분 44초 55 · <strong>2위</strong></div>
+      <div class="hi">접영 100m — 1분 34초 70 · <strong>4위</strong></div>
+    </div>
+
+    <p>꾸준한 도전으로 이룬 값진 성과, 함께 축하해주세요! 💪</p>
+  </div>
+
+  <!-- 4: 사진 -->
+  <div class="slide s4">
+    <div class="st">🏆 수원특례시장배 시상식</div>
+    <div class="one">
+      <img src="oct_photo_01.jpg" alt="제24회 수원특례시장배 전국장애인수영대회 시상식">
+    </div>
+    <div class="cap">
+      제24회 수원특례시장배 전국장애인수영대회 시상식
+    </div>
+  </div>
+
+  <!-- 5: 안내사항 -->
+  <div class="slide s5">
+    <div class="st">📌 10월 안내사항</div>
+    <div class="ic w">
+      <h4>📅 10월 휴강일</h4>
+      <p>매주 월요일 휴강 (10/5·12·19·26)<br>10/3(토) 개천절 휴관 · 10/9(금) 한글날 휴관<br>10/29(목)~31(토) 5주차 휴강</p>
+    </div>
+    <div class="ic ok">
+      <h4>✅ 보강수업 안내</h4>
+      <p><strong>개천절(10/3)·한글날(10/9) 휴관</strong>은 보강이 가능합니다.<br>휴강된 수업은 담당 선생님과 <strong>보강 일정</strong>을 잡아주세요.</p>
+    </div>
+    <div class="ic w">
+      <h4>🚫 수영 2시간 이내 식사 금지</h4>
+      <p>안전사고(질식, 구토) 위험으로 <strong>절대 금지</strong>. 위반 시 수업 참여 불가, 환불 불가.</p>
+    </div>
+  </div>
+
+  <!-- 6: 마무리 -->
+  <div class="slide s6">
+    <div class="be">🍁</div>
+    <h2>가을에도 함께 성장해요</h2>
+    <p>우리 아이들의 도전과 성장을<br>함께 응원해주세요!</p>
+    <div class="ft">
+      JS 운동발달센터
+    </div>
+  </div>
+</div>
+
+<!-- 하단 네비게이션 -->
+<div class="nav">
+  <button id="prevBtn" disabled>◀</button>
+  <div class="dots" id="dots"></div>
+  <span class="counter" id="counter">1 / 6</span>
+  <button id="nextBtn">▶</button>
+</div>
+
+<script>
+(function() {
+  var slides = document.querySelectorAll('.slide');
+  var total = slides.length;
+  var current = 0;
+  var dots = document.getElementById('dots');
+  var counter = document.getElementById('counter');
+  var prevBtn = document.getElementById('prevBtn');
+  var nextBtn = document.getElementById('nextBtn');
+
+  for (var i = 0; i < total; i++) {
+    (function(idx) {
+      var dot = document.createElement('div');
+      dot.className = 'dot' + (idx === 0 ? ' active' : '');
+      dot.addEventListener('click', function() { goTo(idx); });
+      dots.appendChild(dot);
+    })(i);
+  }
+  updateUI();
+
+  function goTo(index) {
+    if (index === current) return;
+    slides[current].classList.remove('active');
+    slides[current].classList.add('exit');
+    var self = current;
+    setTimeout(function() {
+      slides[self].classList.remove('exit');
+      slides[index].classList.add('active');
+    }, 50);
+    current = index;
+    updateUI();
+  }
+
+  function updateUI() {
+    counter.textContent = (current + 1) + ' / ' + total;
+    prevBtn.disabled = (current === 0);
+    nextBtn.disabled = (current === total - 1);
+    var allDots = dots.querySelectorAll('.dot');
+    for (var i = 0; i < allDots.length; i++) {
+      allDots[i].classList.toggle('active', i === current);
+    }
+  }
+
+  function next() { if (current < total - 1) goTo(current + 1); }
+  function prev() { if (current > 0) goTo(current - 1); }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+  });
+
+  var touchStartX = 0;
+  document.addEventListener('touchstart', function(e) { touchStartX = e.changedTouches[0].screenX; });
+  document.addEventListener('touchend', function(e) {
+    var diff = touchStartX - e.changedTouches[0].screenX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) next();
+      else prev();
+    }
+  });
+})();
+</script>
+</body>
+</html>
